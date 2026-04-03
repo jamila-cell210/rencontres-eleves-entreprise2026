@@ -176,7 +176,14 @@ input:focus,select:focus{border-color:#1B4FA0;}
     <button class="btn btn-secondary" onclick="goEtape1()">← Retour</button>
   </div>
   <div id="etape-3" style="display:none">
-    <div class="info-box">Clique sur un créneau pour le réserver. 🔴 = déjà pris · ⚠️ = tu as déjà un RDV à cette heure</div>
+    <div id="popup-conflit" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;justify-content:center;align-items:center;">
+      <div style="background:#fff;border-radius:14px;padding:24px;max-width:320px;margin:0 20px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:12px">&#9888;&#65039;</div>
+        <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:8px" id="popup-titre"></div>
+        <div style="font-size:13px;color:#666;line-height:1.6;margin-bottom:16px" id="popup-msg"></div>
+        <button onclick="document.getElementById('popup-conflit').style.display='none'" style="background:#1B4FA0;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;width:100%">OK, compris !</button>
+      </div>
+    </div>
     <div id="creneaux-container"></div>
     <button class="btn btn-primary" onclick="goEtape4()">Voir le récapitulatif →</button>
     <button class="btn btn-secondary" onclick="goEtape2()">← Retour</button>
@@ -334,10 +341,19 @@ function renderCreneaux(){
   }).join('');
 }
 
+function showPopup(titre, msg){
+  document.getElementById('popup-titre').textContent=titre;
+  document.getElementById('popup-msg').textContent=msg;
+  document.getElementById('popup-conflit').style.display='flex';
+}
 function toggleSlot(eid,t){
-  if(getTaken(eid,state.nom).includes(t))return;
+  if(getTaken(eid,state.nom).includes(t)) return;
   const sl=(state.selectedCreneaux[eid]||[]).includes(t);
-  if(!sl&&getMyTimes().includes(t))return;
+  if(!sl&&getMyTimes().includes(t)){
+    const e=ENTREPRISES.find(x=>x.id===eid);
+    showPopup('Conflit d'horaire !', 'Tu as déjà un rendez-vous à ' + t + ' avec une autre entreprise ! Désélectionne-le d'abord si tu veux le remplacer.');
+    return;
+  }
   if(!state.selectedCreneaux[eid])state.selectedCreneaux[eid]=[];
   const i=state.selectedCreneaux[eid].indexOf(t);
   if(i===-1)state.selectedCreneaux[eid].push(t);else state.selectedCreneaux[eid].splice(i,1);
@@ -520,7 +536,7 @@ function buildElevePrintHTML(insc){
       </div>`).join('')}
     ${!rdvs.length?'<p style="color:#aaa;font-style:italic">Aucun créneau enregistré.</p>':''}
     <div style="margin-top:16px;padding:10px;background:#fff8e6;border:1px solid #f0c830;border-radius:6px;font-size:11px;color:#7a5800">
-      ⚠️ En t'inscrivant tu t'es engagé(e) à être présent(e). En cas d'absence préviens l'organisation.
+      ⚠️ En t'inscrivant tu t'es engagé(e) à être présent(e). En cas d'absence préviens le lycée dès que possible.
     </div>
   </div>`;
 }
