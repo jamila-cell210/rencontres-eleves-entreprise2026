@@ -30,7 +30,7 @@ input:focus,select:focus{border-color:#1B4FA0;}
 .e-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;border:2px solid #e8e8e8;border-left-width:5px;transition:all 0.15s;}
 .e-card:hover{border-color:#1B4FA0;}
 .e-card.selected{border-color:#1B4FA0;background:#f0f6ff;}
-.e-card.cram{border-left-color:#E63232;}.e-card.arptego{border-left-color:#1B4FA0;}.e-card.bouygues{border-left-color:#E8651A;}.e-card.nge{border-left-color:#D4B800;}.e-card.seem{border-left-color:#2B8CA0;}
+.e-card.cram{border-left-color:#E63232;}.e-card.arptego{border-left-color:#1B4FA0;}.e-card.bouygues{border-left-color:#E8651A;}.e-card.nge{border-left-color:#D4B800;}.e-card.seem{border-left-color:#2B8CA0;}.e-card.leon{border-left-color:#7AB317;}
 .e-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
 .e-name{font-size:14px;font-weight:700;color:#1a1a1a;}
 .e-secteur{font-size:11px;color:#888;margin-bottom:8px;}
@@ -247,20 +247,23 @@ const ADMIN_PASSWORD='reecorbu1976';
 const ENTREPRISES=[
   {id:'cram',cls:'cram',color:'#E63232',nom:'CRAM',secteur:'Performance énergétique · Génie climatique CVC',desc:'Entreprise spécialisée dans l\'efficacité énergétique des bâtiments et la transition énergétique.',
    recherche:[{type:'apprentissage',label:'Recherche des apprentis en maintenance chauffage'},{type:'apprentissage',label:'Recherche des apprentis frigoristes'},{type:'apprentissage',label:'Recherche des apprentis monteurs équipements climatiques'}],
-   horaire:'Matin 9h30–13h',creneaux:{matin:['9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:[]}},
+   horaire:'Matin 9h30–13h (présentation en classe à 9h)',creneaux:{matin:['9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:[]}},
   {id:'arptego',cls:'arptego',color:'#1B4FA0',nom:'ARPTEGO Géomètre-Expert',secteur:'Géomètre · Foncier · Copropriété · Rénovation',desc:'Cabinet centenaire à Cormeilles-en-Parisis et Pontoise. Drones, scanners 3D, stations totales.',
    recherche:[{type:'stage',label:'Recherche des stagiaires Géomètre pour juin–juillet 2026'}],
-   horaire:'Matin 9h–11h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45'],aprem:[]}},
+   horaire:'Matin 9h30–11h (présentation en classe à 9h)',creneaux:{matin:['9h30','9h45','10h00','10h15','10h30','10h45'],aprem:[]}},
   {id:'bouygues',cls:'bouygues',color:'#E8651A',nom:'Bouygues Construction',secteur:'Gros œuvre · Coffrage · Béton armé',desc:'Grand groupe de construction. Coffrage, décoffrage, pose d\'armatures, structures béton armé.',
    recherche:[{type:'cdi',label:'Propose un CDI Coffreur'},{type:'apprentissage',label:'Recherche des apprentis en CAP Maçonnerie'},{type:'apprentissage',label:'Recherche des apprentis en Bac Pro TBORGO'}],
    horaire:'Matin 9h–13h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:[]}},
   {id:'nge',cls:'nge',color:'#D4B800',nom:'NGE',secteur:'Groupe BTP · Construction & aménagement',desc:'VRD, génie civil, routes, ferroviaire, bâtiment, fondations, énergies & télécom. Du CAP à l\'ingénieur.',
    recherche:[{type:'stage',label:'Recherche des stagiaires — toutes filières BTP'},{type:'apprentissage',label:'Recherche des apprentis — toutes filières BTP'}],
    horaire:'Toute la journée 9h–17h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:['14h00','14h15','14h30','14h45','15h00','15h15','15h30','15h45','16h00','16h15','16h30','16h45']}},
+  {id:'leon',cls:'leon',color:'#7AB317',nom:'Léon Grosse',secteur:'Gros œuvre · Génie civil · Construction',desc:'Groupe de construction intervenant sur des projets d\'envergure : gros œuvre, génie civil, rénovation.',
+   recherche:[{type:'stage',label:'Recherche des stagiaires — toutes filières BTP'},{type:'apprentissage',label:'Recherche des apprentis — toutes filières BTP'}],
+   horaire:'Toute la journée 9h–17h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:['14h00','14h15','14h30','14h45','15h00','15h15','15h30','15h45','16h00','16h15','16h30','16h45']}},
   {id:'seem',cls:'seem',color:'#2B8CA0',nom:'SEEM — Groupe Fareneit',secteur:'Plomberie · Climatisation · Chauffage · Froid · Électrotechnique',desc:'Parcours techniques en génie climatique, plomberie et électrotechnique. Du CAP au Bac Pro.',
    recherche:[{type:'stage',label:'Recherche des stagiaires en plomberie, chauffage, clim'},{type:'apprentissage',label:'Recherche des apprentis CAP MIS, Thermiques, Maintenance'}],
-   horaire:'Après-midi 14h–17h',creneaux:{matin:[],aprem:['14h00','14h15','14h30','14h45','15h00','15h15','15h30','15h45','16h00','16h15','16h30','16h45']}}
-];
+   horaire:'Après-midi 14h30–17h (présentation en classe à 14h)',creneaux:{matin:[],aprem:['14h30','14h45','15h00','15h15','15h30','15h45','16h00','16h15','16h30','16h45']}}
+]
 
 const CLASS_HINTS={
   '1 MIS':'💡 Parfait pour CRAM et SEEM — ils recherchent des profils comme toi !',
