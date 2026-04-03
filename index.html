@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rencontres Élèves Entreprises — 9 avril 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh;}
+.site-header{background:#1B4FA0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.site-title{color:#fff;font-size:15px;font-weight:600;line-height:1.3;}
+.site-title span{color:#F5D800;}
+.site-title small{display:block;font-size:11px;color:#a8c8f0;font-weight:400;margin-top:2px;}
+.admin-btn{font-size:11px;color:#a8c8f0;border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;background:transparent;cursor:pointer;}
+.page{display:none;max-width:600px;margin:0 auto;padding:16px;}
+.page.active{display:block;}
+.page.wide{max-width:960px;}
+.steps{display:flex;margin-bottom:20px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0e0e0;}
+.step{flex:1;text-align:center;font-size:10px;color:#aaa;padding:10px 4px;border-right:1px solid #e0e0e0;}
+.step:last-child{border-right:none;}
+.step.active{color:#1B4FA0;background:#E6F1FB;font-weight:600;}
+.step.done{color:#1D9E75;background:#f0faf5;}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #e8e8e8;}
+.form-label{font-size:13px;font-weight:600;color:#222;margin-bottom:7px;display:block;}
+.form-label span{color:#E63232;}
+input[type=text],input[type=password],select{width:100%;font-size:16px;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;outline:none;-webkit-appearance:none;appearance:none;background:#fff;}
+input:focus,select:focus{border-color:#1B4FA0;}
+.warning-box{background:#fff8e6;border:1px solid #f0c830;border-radius:8px;padding:10px 14px;font-size:12px;color:#7a5800;margin-bottom:14px;line-height:1.6;}
+.info-box{background:#E6F1FB;border:1px solid #b5d4f4;border-radius:8px;padding:10px 14px;font-size:12px;color:#0C447C;margin-bottom:14px;line-height:1.6;}
+.e-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;border:2px solid #e8e8e8;border-left-width:5px;transition:all 0.15s;}
+.e-card:hover{border-color:#1B4FA0;}
+.e-card.selected{border-color:#1B4FA0;background:#f0f6ff;}
+.e-card.cram{border-left-color:#E63232;}.e-card.arptego{border-left-color:#1B4FA0;}.e-card.bouygues{border-left-color:#E8651A;}.e-card.nge{border-left-color:#D4B800;}.e-card.seem{border-left-color:#2B8CA0;}
+.e-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.e-name{font-size:14px;font-weight:700;color:#1a1a1a;}
+.e-secteur{font-size:11px;color:#888;margin-bottom:8px;}
+.e-desc{font-size:12px;color:#333;line-height:1.5;margin-bottom:10px;}
+.e-recherche-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#aaa;margin-bottom:5px;}
+.e-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.e-tag{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600;}
+.t-green{background:#e8f5d8;color:#3a6d0a;}.t-purple{background:#ece8fb;color:#4a35a0;}.t-orange{background:#fde8d8;color:#8a3a0a;}
+.e-horaire{font-size:11px;color:#888;padding-top:8px;border-top:1px solid #f0f0f0;}
+.check-icon{width:22px;height:22px;background:#1B4FA0;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.check-icon svg{width:13px;height:13px;}
+.creneau-section{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid #e8e8e8;}
+.creneau-title{font-size:13px;font-weight:700;color:#fff;padding:6px 12px;border-radius:8px;margin-bottom:10px;background:#1B4FA0;}
+.creneau-title.aprem{background:#2B8CA0;}
+.creneau-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.slot{border:1.5px solid #e0e0e0;border-radius:8px;padding:7px 4px;cursor:pointer;text-align:center;transition:all 0.15s;background:#fff;}
+.slot:hover:not(.taken):not(.conflict){border-color:#1B4FA0;background:#f0f6ff;}
+.slot.selected{background:#1B4FA0;border-color:#1B4FA0;color:#fff;}
+.slot.taken{background:#f5f5f5;color:#bbb;cursor:not-allowed;}
+.slot.conflict{background:#fce8e8;border-color:#E63232;color:#a02020;cursor:not-allowed;}
+.slot-time{font-size:12px;font-weight:700;}
+.slot-status{font-size:9px;margin-top:2px;}
+.recap-item{background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:8px;border:1px solid #e8e8e8;}
+.recap-item-title{font-size:13px;font-weight:700;margin-bottom:6px;color:#1B4FA0;}
+.recap-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:#666;border-bottom:1px solid #f5f5f5;}
+.recap-row:last-child{border-bottom:none;}
+.recap-row strong{color:#222;}
+.confirm-box{text-align:center;padding:32px 16px;}
+.confirm-icon{width:64px;height:64px;background:#e8f5d8;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.confirm-icon svg{width:32px;height:32px;}
+.confirm-title{font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:10px;}
+.confirm-sub{font-size:13px;color:#666;line-height:1.8;}
+.btn{font-size:14px;padding:12px 20px;border:none;border-radius:10px;cursor:pointer;font-weight:600;width:100%;margin-bottom:8px;text-align:center;display:block;}
+.btn-primary{background:#1B4FA0;color:#fff;}
+.btn-primary:hover{background:#154080;}
+.btn-green{background:#1D9E75;color:#fff;}
+.btn-green:hover{background:#158a60;}
+.btn-red{background:#E63232;color:#fff;}
+.btn-secondary{background:#fff;color:#666;border:1.5px solid #ddd;}
+.btn-sm{font-size:11px;padding:5px 12px;border-radius:20px;width:auto;margin:0;display:inline-block;}
+.btn-pdf{background:#7AB317;color:#fff;font-size:11px;padding:5px 12px;border-radius:20px;border:none;cursor:pointer;font-weight:600;}
+.btn-del{background:#fce8e8;color:#a02020;font-size:11px;padding:5px 10px;border-radius:6px;border:1px solid #f0b0b0;cursor:pointer;font-weight:600;}
+.btn-del:hover{background:#E63232;color:#fff;}
+
+/* ADMIN */
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.admin-title{font-size:18px;font-weight:700;color:#1a1a1a;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.stat-box{background:#fff;border-radius:10px;padding:12px;border:1px solid #e8e8e8;text-align:center;}
+.stat-val{font-size:26px;font-weight:700;color:#1B4FA0;}
+.stat-lbl{font-size:11px;color:#888;margin-top:2px;}
+.tab-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.tab{font-size:12px;padding:6px 14px;border-radius:20px;border:1.5px solid #ddd;background:#fff;color:#666;cursor:pointer;font-weight:500;}
+.tab.active{background:#1B4FA0;color:#fff;border-color:#1B4FA0;}
+.classe-section{background:#fff;border-radius:12px;border:1px solid #e8e8e8;margin-bottom:16px;overflow:hidden;}
+.classe-header{background:#1B4FA0;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;}
+.classe-header-title{font-size:14px;font-weight:700;}
+.classe-header-actions{display:flex;gap:8px;align-items:center;}
+
+/* PLANNING ÉLÈVE */
+.pe-card{background:#fff;border-radius:12px;border:1px solid #e8e8e8;margin-bottom:10px;overflow:hidden;}
+.pe-header{padding:12px 16px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;}
+.pe-name{font-size:14px;font-weight:700;color:#1a1a1a;}
+.pe-classe{font-size:12px;color:#888;}
+.pe-rdv{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid #f8f8f8;}
+.pe-rdv:last-child{border-bottom:none;}
+.pe-rdv.matin{border-left:4px solid #1B4FA0;background:#f8fbff;}
+.pe-rdv.aprem{border-left:4px solid #2B8CA0;background:#f5fbf8;}
+.pe-time{font-size:13px;font-weight:700;color:#1B4FA0;min-width:48px;}
+.pe-time.aprem{color:#2B8CA0;}
+.pe-info{flex:1;}
+.pe-ent{font-size:13px;font-weight:600;color:#1a1a1a;}
+.pe-detail{font-size:11px;color:#888;margin-top:1px;}
+.pe-del{flex-shrink:0;}
+.pe-empty{padding:12px 16px;font-size:13px;color:#aaa;font-style:italic;}
+
+/* PLANNING ENTREPRISE */
+.pent-card{background:#fff;border-radius:12px;border:1px solid #e8e8e8;margin-bottom:10px;overflow:hidden;}
+.pent-header{padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0f0;}
+.pent-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.pent-name{font-size:14px;font-weight:700;color:#1a1a1a;flex:1;}
+.pent-stats{font-size:11px;color:#888;}
+.pent-slot{display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid #f8f8f8;}
+.pent-slot:last-child{border-bottom:none;}
+.pent-time{font-size:12px;font-weight:700;color:#555;min-width:48px;}
+.pent-eleve-name{font-size:13px;font-weight:600;color:#1a1a1a;}
+.pent-eleve-classe{font-size:11px;color:#888;}
+.pent-libre{font-size:12px;color:#1D9E75;font-style:italic;flex:1;}
+
+/* PRINT */
+@media print{
+  .no-print{display:none!important;}
+  .page{display:block!important;max-width:100%!important;padding:0!important;}
+  .print-page{page-break-after:always;}
+  .print-page:last-child{page-break-after:auto;}
+  body{background:#fff;}
+}
+@media(max-width:480px){.creneau-grid{grid-template-columns:repeat(3,1fr);}.stats-grid{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+
+<div class="site-header no-print">
+  <div class="site-title">Rencontres <span>Élèves</span> Entreprises<small>Jeudi 9 avril 2026 — Lycée Le Corbusier</small></div>
+  <button class="admin-btn" onclick="showAdminLogin()">Admin</button>
+</div>
+
+<!-- PAGE ÉLÈVE -->
+<div class="page active" id="page-inscription">
+  <div class="steps">
+    <div class="step active" id="step-1">1. Mes infos</div>
+    <div class="step" id="step-2">2. Entreprises</div>
+    <div class="step" id="step-3">3. Créneaux</div>
+    <div class="step" id="step-4">4. Confirmation</div>
+  </div>
+  <div id="etape-1">
+    <div class="card">
+      <div style="margin-bottom:14px"><label class="form-label">Prénom et nom <span>*</span></label><input type="text" id="eleve-nom" placeholder="ex : Marie Dupont" autocomplete="name"></div>
+      <div><label class="form-label">Classe <span>*</span></label>
+        <select id="eleve-classe">
+          <option value="">-- Choisis ta classe --</option>
+          <optgroup label="3ème"><option value="3PM">3PM — 3ème Prépa Métiers</option></optgroup>
+          <optgroup label="2nde">
+            <option value="2 AMA">2 AMA</option><option value="2 CDBPT">2 CDBPT</option><option value="2 EMNB1">2 EMNB1</option><option value="2 EMNB2">2 EMNB2</option><option value="2 TNE1">2 TNE1</option><option value="2 TNE2">2 TNE2</option><option value="2 UPE2A">2 UPE2A</option>
+          </optgroup>
+          <optgroup label="1ère">
+            <option value="1 AFB">1 AFB</option><option value="1 GEOM">1 GEOM</option><option value="1 ICCER">1 ICCER</option><option value="1 ICCME A">1 ICCME A</option><option value="1 IMTB">1 IMTB</option><option value="1 MACON">1 MACON</option><option value="1 MEE">1 MEE</option><option value="1 MIS">1 MIS</option><option value="1 MIT">1 MIT</option><option value="1 PAR">1 PAR</option><option value="1 TBORGO">1 TBORGO</option><option value="1 TEBAA">1 TEBAA</option><option value="1 TEBEE">1 TEBEE</option><option value="1 TFBMA">1 TFBMA</option><option value="1 TMA">1 TMA</option>
+          </optgroup>
+          <optgroup label="Terminale">
+            <option value="T AFB">T AFB</option><option value="T BORGO">T BORGO</option><option value="T ICCER">T ICCER</option><option value="T ICME APPRENTI">T ICME APPRENTI</option><option value="T IMTB">T IMTB</option><option value="T IST APPRENTI">T IST APPRENTI</option><option value="T MACON">T MACON</option><option value="T MEE">T MEE</option><option value="T MIS">T MIS</option><option value="T MISMIT1">T MISMIT1</option><option value="T MIT">T MIT</option><option value="T PAR">T PAR</option><option value="T TBORGO">T TBORGO</option><option value="T TEBAA">T TEBAA</option><option value="T TEBEE">T TEBEE</option><option value="T TFBMA">T TFBMA</option><option value="T TGT">T TGT</option><option value="T TMA">T TMA</option>
+          </optgroup>
+          <optgroup label="Autre"><option value="FCIL">FCIL</option></optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="warning-box">En t'inscrivant à un créneau, <strong>tu t'engages à être présent(e)</strong>. Tu recevras une convocation avec ta salle avant le 9 avril.</div>
+    <button class="btn btn-primary" onclick="goEtape2()">Voir les entreprises →</button>
+  </div>
+  <div id="etape-2" style="display:none">
+    <div class="info-box" id="info-filiere">Sélectionne les entreprises que tu veux rencontrer.</div>
+    <div id="entreprises-list"></div>
+    <button class="btn btn-primary" onclick="goEtape3()">Choisir mes créneaux →</button>
+    <button class="btn btn-secondary" onclick="goEtape1()">← Retour</button>
+  </div>
+  <div id="etape-3" style="display:none">
+    <div class="info-box">Clique sur un créneau pour le réserver. 🔴 = déjà pris · ⚠️ = tu as déjà un RDV à cette heure</div>
+    <div id="creneaux-container"></div>
+    <button class="btn btn-primary" onclick="goEtape4()">Voir le récapitulatif →</button>
+    <button class="btn btn-secondary" onclick="goEtape2()">← Retour</button>
+  </div>
+  <div id="etape-4" style="display:none">
+    <div id="recap-container"></div>
+    <div class="warning-box">En confirmant, tu t'engages à être présent(e) à tous tes créneaux.</div>
+    <button class="btn btn-green" onclick="confirmer()">✓ Confirmer mon inscription</button>
+    <button class="btn btn-secondary" onclick="goEtape3()">← Modifier</button>
+  </div>
+  <div id="confirmation" style="display:none">
+    <div class="card"><div class="confirm-box">
+      <div class="confirm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="confirm-title">Inscription confirmée !</div>
+      <div class="confirm-sub" id="confirm-text"></div>
+    </div></div>
+    <button class="btn btn-primary" onclick="nouvelleInscription()">Nouvelle inscription</button>
+  </div>
+</div>
+
+<!-- LOGIN ADMIN -->
+<div class="page" id="page-admin-login">
+  <div class="card" style="max-width:360px;margin:40px auto">
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:16px;text-align:center">🔒 Espace admin</h2>
+    <input type="password" id="admin-pwd" placeholder="Mot de passe" style="margin-bottom:10px" onkeydown="if(event.key==='Enter')checkPwd()">
+    <button class="btn btn-primary" onclick="checkPwd()">Accéder</button>
+    <p id="pwd-error" style="color:#E63232;font-size:12px;margin-top:8px;text-align:center"></p>
+  </div>
+  <div style="max-width:360px;margin:0 auto"><button class="btn btn-secondary" onclick="showInscription()">← Retour au site</button></div>
+</div>
+
+<!-- ADMIN -->
+<div class="page wide" id="page-admin">
+  <div class="admin-header no-print">
+    <div class="admin-title">Tableau de bord — 9 avril</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-pdf btn-sm no-print" onclick="printAll()">🖨 Tout imprimer par classe</button>
+      <button class="btn btn-secondary btn-sm no-print" onclick="showInscription()">← Retour au site</button>
+    </div>
+  </div>
+  <div class="stats-grid no-print">
+    <div class="stat-box"><div class="stat-val" id="a-total">0</div><div class="stat-lbl">élèves inscrits</div></div>
+    <div class="stat-box"><div class="stat-val" id="a-rdv">0</div><div class="stat-lbl">rendez-vous</div></div>
+    <div class="stat-box"><div class="stat-val" id="a-libre">0</div><div class="stat-lbl">créneaux libres</div></div>
+  </div>
+  <div class="tab-row no-print">
+    <button class="tab active" onclick="showTab('eleves',this)">Planning élèves</button>
+    <button class="tab" onclick="showTab('entreprises',this)">Planning entreprises</button>
+    <button class="tab" onclick="showTab('liste',this)">Liste complète</button>
+  </div>
+  <div id="tab-eleves"></div>
+  <div id="tab-entreprises" style="display:none"></div>
+  <div id="tab-liste" style="display:none"></div>
+  <!-- ZONE IMPRESSION -->
+  <div id="print-zone" style="display:none"></div>
+</div>
+
+<script>
+const ADMIN_PASSWORD='reecorbu1976';
+
+const ENTREPRISES=[
+  {id:'cram',cls:'cram',color:'#E63232',nom:'CRAM',secteur:'Performance énergétique · Génie climatique CVC',desc:'Entreprise spécialisée dans l\'efficacité énergétique des bâtiments et la transition énergétique.',
+   recherche:[{type:'apprentissage',label:'Recherche des apprentis en maintenance chauffage'},{type:'apprentissage',label:'Recherche des apprentis frigoristes'},{type:'apprentissage',label:'Recherche des apprentis monteurs équipements climatiques'}],
+   horaire:'Matin 9h–13h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:[]}},
+  {id:'arptego',cls:'arptego',color:'#1B4FA0',nom:'ARPTEGO Géomètre-Expert',secteur:'Géomètre · Foncier · Copropriété · Rénovation',desc:'Cabinet centenaire à Cormeilles-en-Parisis et Pontoise. Drones, scanners 3D, stations totales.',
+   recherche:[{type:'stage',label:'Recherche des stagiaires Géomètre pour juin–juillet 2026'}],
+   horaire:'Matin 9h–11h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45'],aprem:[]}},
+  {id:'bouygues',cls:'bouygues',color:'#E8651A',nom:'Bouygues Construction',secteur:'Gros œuvre · Coffrage · Béton armé',desc:'Grand groupe de construction. Coffrage, décoffrage, pose d\'armatures, structures béton armé.',
+   recherche:[{type:'cdi',label:'Propose un CDI Coffreur'},{type:'apprentissage',label:'Recherche des apprentis en CAP Maçonnerie'},{type:'apprentissage',label:'Recherche des apprentis en Bac Pro TBORGO'}],
+   horaire:'Matin 9h–13h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:[]}},
+  {id:'nge',cls:'nge',color:'#D4B800',nom:'NGE',secteur:'Groupe BTP · Construction & aménagement',desc:'VRD, génie civil, routes, ferroviaire, bâtiment, fondations, énergies & télécom. Du CAP à l\'ingénieur.',
+   recherche:[{type:'stage',label:'Recherche des stagiaires — toutes filières BTP'},{type:'apprentissage',label:'Recherche des apprentis — toutes filières BTP'}],
+   horaire:'Toute la journée 9h–17h',creneaux:{matin:['9h00','9h15','9h30','9h45','10h00','10h15','10h30','10h45','11h00','11h15','11h30','11h45','12h00','12h15','12h30','12h45'],aprem:['14h00','14h15','14h30','14h45','15h00','15h15','15h30','15h45','16h00','16h15','16h30','16h45']}},
+  {id:'seem',cls:'seem',color:'#2B8CA0',nom:'SEEM — Groupe Fareneit',secteur:'Plomberie · Climatisation · Chauffage · Froid · Électrotechnique',desc:'Parcours techniques en génie climatique, plomberie et électrotechnique. Du CAP au Bac Pro.',
+   recherche:[{type:'stage',label:'Recherche des stagiaires en plomberie, chauffage, clim'},{type:'apprentissage',label:'Recherche des apprentis CAP MIS, Thermiques, Maintenance'}],
+   horaire:'Après-midi 14h–17h',creneaux:{matin:[],aprem:['14h00','14h15','14h30','14h45','15h00','15h15','15h30','15h45','16h00','16h15','16h30','16h45']}}
+];
+
+const CLASS_HINTS={
+  '1 MIS':'💡 Parfait pour CRAM et SEEM — ils recherchent des profils comme toi !',
+  'T MIS':'💡 Parfait pour CRAM et SEEM — ils recherchent des profils comme toi !',
+  'T MISMIT1':'💡 Parfait pour CRAM et SEEM — ils recherchent des profils comme toi !',
+  '1 MIT':'💡 CRAM et SEEM recherchent des profils Installations Thermiques !',
+  'T MIT':'💡 CRAM et SEEM recherchent des profils Installations Thermiques !',
+  '1 MACON':'💡 Bouygues et NGE recherchent des profils Maçonnerie !',
+  'T MACON':'💡 Bouygues et NGE recherchent des profils Maçonnerie !',
+  '1 TBORGO':'💡 Bouygues et NGE recherchent spécifiquement des Bac Pro TBORGO !',
+  'T TBORGO':'💡 Bouygues et NGE recherchent spécifiquement des Bac Pro TBORGO !',
+  'T BORGO':'💡 Bouygues et NGE recherchent des profils Gros œuvre !',
+  '1 GEOM':'💡 ARPTEGO est LE cabinet de géomètre local — ne manque pas ça !',
+  'T TGT':'💡 ARPTEGO est LE cabinet de géomètre local — ne manque pas ça !',
+  '1 TEBEE':'💡 CRAM et SEEM cherchent des profils énergétiques comme toi !',
+  'T TEBEE':'💡 CRAM et SEEM cherchent des profils énergétiques comme toi !',
+  '1 TEBAA':'💡 CRAM et SEEM cherchent des profils énergétiques comme toi !',
+  'T TEBAA':'💡 CRAM et SEEM cherchent des profils énergétiques comme toi !',
+};
+
+let state={nom:'',classe:'',selectedEntreprises:[],selectedCreneaux:{},inscriptions:[]};
+
+function tagClass(t){return t==='stage'?'t-green':t==='apprentissage'?'t-purple':'t-orange';}
+function getTaken(eid,excl){return state.inscriptions.filter(i=>i.nom!==excl).flatMap(i=>(i.creneaux[eid]||[]));}
+function getMyTimes(){const me=state.inscriptions.find(i=>i.nom===state.nom);return me?Object.values(me.creneaux).flat():[];}
+function showOnly(id){['etape-1','etape-2','etape-3','etape-4','confirmation'].forEach(x=>{document.getElementById(x).style.display=x===id?'block':'none';});}
+function setStep(n){for(let i=1;i<=4;i++){document.getElementById('step-'+i).className='step'+(i<n?' done':i===n?' active':'');}}
+
+function goEtape1(){setStep(1);showOnly('etape-1');}
+function goEtape2(){
+  const nom=document.getElementById('eleve-nom').value.trim(),cls=document.getElementById('eleve-classe').value;
+  if(!nom||!cls){alert('Remplis tous les champs !');return;}
+  state.nom=nom;state.classe=cls;
+  const hint=CLASS_HINTS[cls],box=document.getElementById('info-filiere');
+  box.textContent=hint||'Sélectionne les entreprises que tu veux rencontrer. Tu peux en choisir plusieurs !';
+  box.style.background=hint?'#E1F5EE':'#E6F1FB';
+  box.style.borderColor=hint?'#9FE1CB':'#b5d4f4';
+  box.style.color=hint?'#085041':'#0C447C';
+  renderEntreprises();setStep(2);showOnly('etape-2');
+}
+function goEtape3(){if(!state.selectedEntreprises.length){alert('Sélectionne au moins une entreprise !');return;}renderCreneaux();setStep(3);showOnly('etape-3');}
+function goEtape4(){if(!state.selectedEntreprises.some(e=>(state.selectedCreneaux[e]||[]).length)){alert('Sélectionne au moins un créneau !');return;}renderRecap();setStep(4);showOnly('etape-4');}
+
+function renderEntreprises(){
+  document.getElementById('entreprises-list').innerHTML=ENTREPRISES.map(e=>{
+    const sel=state.selectedEntreprises.includes(e.id);
+    return `<div class="e-card ${e.cls} ${sel?'selected':''}" onclick="toggleE('${e.id}')">
+      <div class="e-header"><div><div class="e-name">${e.nom}</div><div class="e-secteur">${e.secteur}</div></div>
+      ${sel?`<div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>`:''}</div>
+      <div class="e-desc">${e.desc}</div>
+      <div class="e-recherche-title">Ce qu'ils proposent / recherchent</div>
+      <div class="e-tags">${e.recherche.map(r=>`<span class="e-tag ${tagClass(r.type)}">${r.label}</span>`).join('')}</div>
+      <div class="e-horaire">🕐 ${e.horaire}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleE(id){
+  const i=state.selectedEntreprises.indexOf(id);
+  if(i===-1)state.selectedEntreprises.push(id);
+  else{state.selectedEntreprises.splice(i,1);delete state.selectedCreneaux[id];}
+  renderEntreprises();
+}
+
+function renderCreneaux(){
+  const myT=getMyTimes();
+  document.getElementById('creneaux-container').innerHTML=state.selectedEntreprises.map(eid=>{
+    const e=ENTREPRISES.find(x=>x.id===eid),taken=getTaken(eid,state.nom);
+    let h='';
+    function slots(list,aprem){
+      if(!list.length)return'';
+      let s=`<div class="creneau-section"><div class="creneau-title${aprem?' aprem':''}">${e.nom} — ${aprem?'Après-midi':'Matin'}</div><div class="creneau-grid">`;
+      list.forEach(t=>{const tk=taken.includes(t),sl=(state.selectedCreneaux[eid]||[]).includes(t),cf=!sl&&myT.includes(t);
+        s+=`<div class="slot ${tk?'taken':cf?'conflict':sl?'selected':''}" onclick="toggleSlot('${eid}','${t}')"><div class="slot-time">${t}</div><div class="slot-status">${tk?'Complet':cf?'Conflit':sl?'✓ Choisi':'Libre'}</div></div>`;});
+      return s+'</div></div>';
+    }
+    return slots(e.creneaux.matin,false)+slots(e.creneaux.aprem,true);
+  }).join('');
+}
+
+function toggleSlot(eid,t){
+  if(getTaken(eid,state.nom).includes(t))return;
+  const sl=(state.selectedCreneaux[eid]||[]).includes(t);
+  if(!sl&&getMyTimes().includes(t))return;
+  if(!state.selectedCreneaux[eid])state.selectedCreneaux[eid]=[];
+  const i=state.selectedCreneaux[eid].indexOf(t);
+  if(i===-1)state.selectedCreneaux[eid].push(t);else state.selectedCreneaux[eid].splice(i,1);
+  renderCreneaux();
+}
+
+function renderRecap(){
+  let h='<div class="recap-item"><div class="recap-item-title">Tes informations</div>'
+    +`<div class="recap-row"><span>Nom</span><strong>${state.nom}</strong></div>`
+    +`<div class="recap-row"><span>Classe</span><strong>${state.classe}</strong></div></div>`;
+  state.selectedEntreprises.forEach(eid=>{
+    const e=ENTREPRISES.find(x=>x.id===eid),slots=(state.selectedCreneaux[eid]||[]).sort();
+    if(!slots.length)return;
+    h+=`<div class="recap-item"><div class="recap-item-title">${e.nom}</div>${slots.map(s=>`<div class="recap-row"><span>Créneau</span><strong>${s}</strong></div>`).join('')}</div>`;
+  });
+  document.getElementById('recap-container').innerHTML=h;
+}
+
+function confirmer(){
+  const insc={nom:state.nom,classe:state.classe,creneaux:JSON.parse(JSON.stringify(state.selectedCreneaux))};
+  const ex=state.inscriptions.findIndex(i=>i.nom===state.nom);
+  if(ex!==-1)state.inscriptions[ex]=insc;else state.inscriptions.push(insc);
+  const n=Object.values(state.selectedCreneaux).flat().length;
+  document.getElementById('confirm-text').innerHTML=`<b>${state.nom}</b> (${state.classe})<br>Tu es inscrit(e) à <b>${n} rendez-vous</b> !<br><br>Ta convocation t'attend avant le 9 avril.<br><br>N'oublie pas : <b>CV + lettre de motivation obligatoires</b> !`;
+  showOnly('confirmation');setStep(4);save();
+}
+
+function nouvelleInscription(){
+  state.nom='';state.classe='';state.selectedEntreprises=[];state.selectedCreneaux={};
+  document.getElementById('eleve-nom').value='';document.getElementById('eleve-classe').value='';
+  showOnly('etape-1');setStep(1);
+}
+
+function save(){try{localStorage.setItem('inscriptions_9avril',JSON.stringify(state.inscriptions));}catch(e){}}
+function load(){try{const d=localStorage.getItem('inscriptions_9avril');if(d)state.inscriptions=JSON.parse(d);}catch(e){}}
+
+function showAdminLogin(){['page-inscription','page-admin-login','page-admin'].forEach(p=>document.getElementById(p).classList.remove('active'));document.getElementById('page-admin-login').classList.add('active');}
+function checkPwd(){
+  if(document.getElementById('admin-pwd').value===ADMIN_PASSWORD){
+    ['page-inscription','page-admin-login','page-admin'].forEach(p=>document.getElementById(p).classList.remove('active'));
+    document.getElementById('page-admin').classList.add('active');renderAdmin();
+  }else{document.getElementById('pwd-error').textContent='Mot de passe incorrect.';}
+}
+function showInscription(){['page-inscription','page-admin-login','page-admin'].forEach(p=>document.getElementById(p).classList.remove('active'));document.getElementById('page-inscription').classList.add('active');}
+function showTab(tab,btn){
+  ['eleves','entreprises','liste'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+}
+
+// ADMIN DELETE
+function deleteSlot(nom,eid,slot){
+  const i=state.inscriptions.findIndex(x=>x.nom===nom);
+  if(i===-1)return;
+  const idx=(state.inscriptions[i].creneaux[eid]||[]).indexOf(slot);
+  if(idx!==-1)state.inscriptions[i].creneaux[eid].splice(idx,1);
+  if(!state.inscriptions[i].creneaux[eid].length)delete state.inscriptions[i].creneaux[eid];
+  save();renderAdmin();
+}
+
+function deleteEleve(nom){
+  if(!confirm('Supprimer toute l\'inscription de '+nom+' ?'))return;
+  state.inscriptions=state.inscriptions.filter(i=>i.nom!==nom);
+  save();renderAdmin();
+}
+
+// GET PLANNINGS
+function getAllRdv(insc){
+  return Object.entries(insc.creneaux).flatMap(([eid,slots])=>{
+    const e=ENTREPRISES.find(x=>x.id===eid);
+    return slots.map(s=>({time:s,eid,ent:e,matin:e&&e.creneaux.matin.includes(s)}));
+  }).sort((a,b)=>a.time.localeCompare(b.time));
+}
+
+function cardEleve(insc){
+  const rdvs=getAllRdv(insc);
+  return `<div class="pe-card">
+    <div class="pe-header">
+      <div><div class="pe-name">${insc.nom}</div><div class="pe-classe">${insc.classe}</div></div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="btn-pdf" onclick="printEleve('${insc.nom}')">🖨 PDF</button>
+        <button class="btn-del" onclick="deleteEleve('${insc.nom}')">✕</button>
+      </div>
+    </div>
+    ${rdvs.length?rdvs.map(r=>`
+      <div class="pe-rdv ${r.matin?'matin':'aprem'}">
+        <div class="pe-time ${r.matin?'':'aprem'}">${r.time}</div>
+        <div class="pe-info"><div class="pe-ent">${r.ent?r.ent.nom:r.eid}</div><div class="pe-detail">${r.ent?r.ent.secteur:''}</div></div>
+        <div class="pe-del"><button class="btn-del" onclick="deleteSlot('${insc.nom}','${r.eid}','${r.time}')">✕</button></div>
+      </div>`).join('')
+    :'<div class="pe-empty">Aucun créneau</div>'}
+  </div>`;
+}
+
+function renderAdmin(){
+  const ins=state.inscriptions;
+  const rdv=ins.reduce((a,i)=>a+Object.values(i.creneaux).flat().length,0);
+  const total=ENTREPRISES.reduce((a,e)=>a+e.creneaux.matin.length+e.creneaux.aprem.length,0);
+  document.getElementById('a-total').textContent=ins.length;
+  document.getElementById('a-rdv').textContent=rdv;
+  document.getElementById('a-libre').textContent=total-rdv;
+
+  // PAR CLASSE
+  const classes=[...new Set(ins.map(i=>i.classe))].sort();
+  let eh='';
+  if(!ins.length){eh='<p style="color:#aaa;font-size:13px;padding:1rem 0">Aucune inscription pour le moment.</p>';}
+  else{
+    eh=classes.map(cls=>{
+      const elevesCls=ins.filter(i=>i.classe===cls);
+      return `<div class="classe-section">
+        <div class="classe-header">
+          <div class="classe-header-title">Classe ${cls} — ${elevesCls.length} élève${elevesCls.length>1?'s':''}</div>
+          <div class="classe-header-actions">
+            <button class="btn-pdf" onclick="printClasse('${cls}')">🖨 Imprimer la classe</button>
+          </div>
+        </div>
+        <div style="padding:10px">${elevesCls.map(i=>cardEleve(i)).join('')}</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('tab-eleves').innerHTML=eh;
+
+  // ENTREPRISES
+  const entH=ENTREPRISES.map(e=>{
+    const allSlots=[...e.creneaux.matin,...e.creneaux.aprem];
+    const taken=allSlots.filter(s=>ins.some(i=>(i.creneaux[e.id]||[]).includes(s)));
+    return `<div class="pent-card">
+      <div class="pent-header">
+        <div class="pent-dot" style="background:${e.color}"></div>
+        <div class="pent-name">${e.nom}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="pent-stats">${taken.length}/${allSlots.length} créneaux</div>
+          <button class="btn-pdf" onclick="printEntreprise('${e.id}')">🖨 PDF</button>
+        </div>
+      </div>
+      ${allSlots.map(slot=>{
+        const i=ins.find(x=>(x.creneaux[e.id]||[]).includes(slot));
+        return `<div class="pent-slot">
+          <div class="pent-time">${slot}</div>
+          ${i?`<div class="pent-eleve-name" style="flex:1">${i.nom}</div><div class="pent-eleve-classe">${i.classe}</div>
+               <button class="btn-del" onclick="deleteSlot('${i.nom}','${e.id}','${slot}')">✕</button>`
+             :`<div class="pent-libre">Disponible</div>`}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+  document.getElementById('tab-entreprises').innerHTML=entH;
+
+  // LISTE
+  let listH='';
+  if(!ins.length){listH='<p style="color:#aaa;font-size:13px;padding:1rem 0">Aucune inscription.</p>';}
+  else{
+    const cls=[...new Set(ins.map(i=>i.classe))].sort();
+    listH=cls.map(c=>{
+      const eleves=ins.filter(i=>i.classe===c);
+      return `<div style="margin-bottom:16px"><h3 style="font-size:13px;font-weight:700;color:#1B4FA0;margin-bottom:8px;padding:4px 10px;background:#E6F1FB;border-radius:6px">Classe ${c}</h3>`
+        +`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#1B4FA0;color:#fff"><th style="padding:7px 10px;text-align:left">Élève</th><th style="padding:7px 10px;text-align:left">Entreprise</th><th style="padding:7px 10px;text-align:left">Créneau</th></tr></thead><tbody>`
+        +eleves.flatMap(i=>getAllRdv(i).map(r=>`<tr style="border-bottom:1px solid #f0f0f0"><td style="padding:6px 10px">${i.nom}</td><td style="padding:6px 10px">${r.ent?r.ent.nom:r.eid}</td><td style="padding:6px 10px;font-weight:700">${r.time}</td></tr>`)).join('')
+        +'</tbody></table></div></div>';
+    }).join('');
+  }
+  document.getElementById('tab-liste').innerHTML=listH;
+}
+
+// IMPRESSION
+function buildElevePrintHTML(insc){
+  const rdvs=getAllRdv(insc);
+  return `<div class="print-page" style="padding:20px;font-family:sans-serif;max-width:600px;margin:0 auto">
+    <div style="background:#1B4FA0;color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:16px">
+      <div style="font-size:18px;font-weight:700">${insc.nom}</div>
+      <div style="font-size:13px;opacity:0.8">Classe : ${insc.classe} · Rencontres Élèves-Entreprises — 9 avril 2026</div>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:12px">Présente cette convocation le jour J. CV + lettre de motivation obligatoires.</div>
+    ${rdvs.map(r=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;margin-bottom:8px;border-radius:8px;${r.matin?'background:#E6F1FB;border-left:4px solid #1B4FA0':'background:#E1F5EE;border-left:4px solid #1D9E75'}">
+        <div style="font-size:15px;font-weight:700;color:${r.matin?'#1B4FA0':'#1D9E75'};min-width:50px">${r.time}</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#1a1a1a">${r.ent?r.ent.nom:r.eid}</div>
+          <div style="font-size:11px;color:#888">${r.ent?r.ent.secteur:''}</div>
+        </div>
+      </div>`).join('')}
+    ${!rdvs.length?'<p style="color:#aaa;font-style:italic">Aucun créneau enregistré.</p>':''}
+    <div style="margin-top:16px;padding:10px;background:#fff8e6;border:1px solid #f0c830;border-radius:6px;font-size:11px;color:#7a5800">
+      ⚠️ En t'inscrivant tu t'es engagé(e) à être présent(e). En cas d'absence préviens l'organisation.
+    </div>
+  </div>`;
+}
+
+function buildEntreprisePrintHTML(eid){
+  const e=ENTREPRISES.find(x=>x.id===eid);
+  const allSlots=[...e.creneaux.matin,...e.creneaux.aprem];
+  return `<div class="print-page" style="padding:20px;font-family:sans-serif;max-width:700px;margin:0 auto">
+    <div style="background:${e.color};color:#fff;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+      <div><div style="font-size:18px;font-weight:700">${e.nom}</div><div style="font-size:12px;opacity:0.85">${e.secteur}</div></div>
+      <div style="font-size:12px;opacity:0.85;text-align:right">9 avril 2026<br>${e.horaire}</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="background:#f5f5f5"><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #ddd">Horaire</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #ddd">Élève</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #ddd">Classe</th></tr></thead>
+      <tbody>${allSlots.map(slot=>{
+        const i=state.inscriptions.find(x=>(x.creneaux[eid]||[]).includes(slot));
+        return `<tr style="border-bottom:1px solid #f0f0f0">
+          <td style="padding:8px 12px;font-weight:700;color:#333">${slot}</td>
+          <td style="padding:8px 12px;${i?'font-weight:600;color:#1a1a1a':'color:#aaa;font-style:italic'}">${i?i.nom:'Disponible'}</td>
+          <td style="padding:8px 12px;color:#888">${i?i.classe:''}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+function printEleve(nom){
+  const i=state.inscriptions.find(x=>x.nom===nom);
+  if(!i)return;
+  doPrint(buildElevePrintHTML(i));
+}
+
+function printClasse(cls){
+  const eleves=state.inscriptions.filter(i=>i.classe===cls);
+  doPrint(eleves.map(i=>buildElevePrintHTML(i)).join(''));
+}
+
+function printEntreprise(eid){
+  doPrint(buildEntreprisePrintHTML(eid));
+}
+
+function printAll(){
+  const classes=[...new Set(state.inscriptions.map(i=>i.classe))].sort();
+  const html=classes.flatMap(cls=>
+    state.inscriptions.filter(i=>i.classe===cls).map(i=>buildElevePrintHTML(i))
+  ).join('');
+  doPrint(html);
+}
+
+function doPrint(html){
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Planning — Lycée Le Corbusier</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;}.print-page{page-break-after:always;}.print-page:last-child{page-break-after:auto;}</style>
+  </head><body>${html}</body></html>`);
+  w.document.close();
+  w.onload=()=>{w.print();};
+}
+
+load();
+</script>
+</body>
+</html>
