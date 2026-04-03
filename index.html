@@ -351,7 +351,7 @@ function toggleSlot(eid,t){
   const sl=(state.selectedCreneaux[eid]||[]).includes(t);
   if(!sl&&getMyTimes().includes(t)){
     const e=ENTREPRISES.find(x=>x.id===eid);
-    showPopup('Conflit d'horaire !', 'Tu as déjà un rendez-vous à ' + t + ' avec une autre entreprise ! Désélectionne-le d'abord si tu veux le remplacer.');
+    showPopup("Conflit d'horaire !", "Tu as déjà un rendez-vous à " + t + " avec une autre entreprise ! Désélectionne-le d'abord si tu veux le remplacer.");
     return;
   }
   if(!state.selectedCreneaux[eid])state.selectedCreneaux[eid]=[];
