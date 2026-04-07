@@ -375,13 +375,13 @@ function renderRecap(){
   document.getElementById('recap-container').innerHTML=h;
 }
 
-function confirmer(){
+async function confirmer(){
   const insc={nom:state.nom,classe:state.classe,creneaux:JSON.parse(JSON.stringify(state.selectedCreneaux))};
   const ex=state.inscriptions.findIndex(i=>i.nom===state.nom);
   if(ex!==-1)state.inscriptions[ex]=insc;else state.inscriptions.push(insc);
   const n=Object.values(state.selectedCreneaux).flat().length;
   document.getElementById('confirm-text').innerHTML=`<b>${state.nom}</b> (${state.classe})<br>Tu es inscrit(e) à <b>${n} rendez-vous</b> !<br><br>Ta convocation t'attend avant le 9 avril.<br><br>N'oublie pas : <b>CV + lettre de motivation obligatoires</b> !`;
-  showOnly('confirmation');setStep(4);save();
+  showOnly('confirmation');setStep(4);save().then(()=>{});
 }
 
 function nouvelleInscription(){
@@ -390,24 +390,33 @@ function nouvelleInscription(){
   showOnly('etape-1');setStep(1);
 }
 
-function save(){try{localStorage.setItem('inscriptions_9avril',JSON.stringify(state.inscriptions));}catch(e){}}
-function load(){try{const d=localStorage.getItem('inscriptions_9avril');if(d)state.inscriptions=JSON.parse(d);}catch(e){}}
+async function save(){
+  try{
+    await window.storage.set('inscriptions_9avril', JSON.stringify(state.inscriptions), true);
+  }catch(e){console.log('save error',e);}
+}
+async function load(){
+  try{
+    const r = await window.storage.get('inscriptions_9avril', true);
+    if(r && r.value) state.inscriptions = JSON.parse(r.value);
+  }catch(e){console.log('load error',e);}
+}
 
 function showAdminLogin(){['page-inscription','page-admin-login','page-admin'].forEach(p=>document.getElementById(p).classList.remove('active'));document.getElementById('page-admin-login').classList.add('active');}
 function checkPwd(){
   if(document.getElementById('admin-pwd').value===ADMIN_PASSWORD){
     ['page-inscription','page-admin-login','page-admin'].forEach(p=>document.getElementById(p).classList.remove('active'));
-    document.getElementById('page-admin').classList.add('active');renderAdmin();
+    document.getElementById('page-admin').classList.add('active');load().then(()=>renderAdmin());
   }else{document.getElementById('pwd-error').textContent='Mot de passe incorrect.';}
 }
 function showInscription(){['page-inscription','page-admin-login','page-admin'].forEach(p=>document.getElementById(p).classList.remove('active'));document.getElementById('page-inscription').classList.add('active');}
-function showTab(tab,btn){
+function showTab(tab,btn){load().then(()=>renderAdmin());
   ['eleves','entreprises','liste'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
 }
 
 // ADMIN DELETE
-function deleteSlot(nom,eid,slot){
+async function deleteSlot(nom,eid,slot){
   const i=state.inscriptions.findIndex(x=>x.nom===nom);
   if(i===-1)return;
   const idx=(state.inscriptions[i].creneaux[eid]||[]).indexOf(slot);
@@ -416,7 +425,7 @@ function deleteSlot(nom,eid,slot){
   save();renderAdmin();
 }
 
-function deleteEleve(nom){
+async function deleteEleve(nom){
   if(!confirm('Supprimer toute l\'inscription de '+nom+' ?'))return;
   state.inscriptions=state.inscriptions.filter(i=>i.nom!==nom);
   save();renderAdmin();
@@ -598,7 +607,7 @@ function doPrint(html){
   w.onload=()=>{w.print();};
 }
 
-load();
+(async()=>{await load().then(()=>{console.log("Inscriptions chargées:",state.inscriptions.length);});})();
 </script>
 </body>
 </html>
